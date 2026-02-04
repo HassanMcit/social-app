@@ -4,28 +4,50 @@ import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import toast from "react-hot-toast";
 import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
 
-const schema = zod.object({
-  name: zod.string().nonempty("Name is Required!").regex(/[a-zA-Z][a-zA-Z ]{3,20}/, "Username must begin with a letter (A–Z or a–z) and may contain only English letters and spaces. Length must be between 4 and 21 characters."),
-  email: zod.email("Enter a valid email using letters, numbers, and a valid domain.").nonempty("Email is Required"),
-  password: zod.string().regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/, "Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, and one number.").nonempty("Password is Required"),
-  rePassword: zod.string().nonempty("Confirm Password is Required"),
-  dateOfBirth: zod.string(),
-  gender: zod.enum(["male", "female"])
-}).refine(function (value) {
-  return value.password === value.rePassword
-}, {
-  error: "Password and Confirm Password Should be Same",
-  path: ["rePassword"]
-})
-
-
+const schema = zod
+  .object({
+    name: zod.string().nonempty("Name is Required").min(3),
+    email: zod.email().nonempty("Email is Required"),
+    password: zod
+      .string()
+      .nonempty("Password is Required")
+      .regex(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
+        "Invalid Password",
+      ),
+    rePassword: zod
+      .string()
+      .nonempty("Confirm Password is Required")
+      .regex(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
+        "Invalid Password",
+      ),
+    dateOfBirth: zod.coerce.date().refine(function (value) {
+      const today = new Date();
+      let age = today.getFullYear() - value.getFullYear();
+      const month = today.getMonth() - value.getMonth();
+      if (month < 0 || (month === 0 && today.getDate() < value.getDate()))
+        age--;
+      return age >= 18;
+    }, "User Age Must Be Above 18 Years Old"),
+    gender: zod.enum(["male", "female"]),
+  })
+  .refine(
+    function (value) {
+      return value.password === value.rePassword;
+    },
+    {
+      error: "Password and Repassword not Same",
+      path: ["rePassword"],
+    },
+  );
 
 export default function Register() {
-  const navigate = useNavigate()
+    const navigate = useNavigate()
   const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
@@ -33,7 +55,8 @@ export default function Register() {
     control,
     setError,
     watch,
-    formState: { errors, dirtyFields },
+    reset,
+    formState: { errors },
   } = useForm({
     defaultValues: {
       name: "",
@@ -44,29 +67,28 @@ export default function Register() {
       gender: "",
     },
     mode: "all",
-    resolver: zodResolver(schema)
+    resolver: zodResolver(schema),
   });
 
-
   async function handleUserRegister(data) {
-    setLoading(true);
+      setLoading(true);
     toast.promise(
       axios.post(`${import.meta.env.VITE_BASE_URL}users/signup`, data),
       {
         loading: "Saving...",
-        success: function ({ data }) {
-          setLoading(false);
-          navigate('/login')
-          return <h1 className="text-green-500">{data.message}</h1>
+        success: function ({data}) {
+            setLoading(false);
+            navigate('/login')
+            return <h1 className="text-green-500">{data.message}</h1>
         },
-        error: function ({ response: { data: { error } } }) {
-          setLoading(false);
-          return <h1 className="text-red-500">{error}</h1>
+        error: function({response:{data: {error}}}) {
+            setLoading(false);
+            return <h1 className="text-red-500">{error}</h1>
         },
       },
     );
 
-
+    
   }
   return (
     <Form
@@ -178,20 +200,20 @@ export default function Register() {
         errorMessage={errors.dateOfBirth?.message}
         type="date"
       />
-
-      <Controller control={control} name="gender" render={function ({ field }) {
+      
+      <Controller control={control} name="gender" render={function() {
         return <Select
-          className="max-w-2xl"
-          label="Gender"
-          placeholder="Select Your Gender"
-          labelPlacement="outside"
-          {...field}
-          selectedKeys={field.value ? [field.value] : []}
-        >
-          <SelectItem key="male">Male</SelectItem>
-          <SelectItem key="female">Female</SelectItem>
-        </Select>
-      }} />
+        className="max-w-2xl"
+        label="Gender"
+        placeholder="Select Your Gender"
+        labelPlacement="outside"
+        {...register("gender")}
+        selectedKeys={field.value ? [field.value] : []}
+      >
+        <SelectItem key="male">Male</SelectItem>
+        <SelectItem key="female">Female</SelectItem>
+      </Select> 
+      }}/>
 
       <p className="font-semibold">
         Already Have Account?{" "}
