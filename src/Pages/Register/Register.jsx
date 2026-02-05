@@ -201,13 +201,13 @@ export default function Register() {
         type="date"
       />
       
-      <Controller control={control} name="gender" render={function() {
+      <Controller control={control} name="gender" render={function({field}) {
         return <Select
         className="max-w-2xl"
         label="Gender"
         placeholder="Select Your Gender"
         labelPlacement="outside"
-        {...register("gender")}
+        {...field}
         selectedKeys={field.value ? [field.value] : []}
       >
         <SelectItem key="male">Male</SelectItem>
