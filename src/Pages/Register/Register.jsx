@@ -208,7 +208,7 @@ export default function Register() {
         placeholder="Select Your Gender"
         labelPlacement="outside"
         {...field}
-        selectedKeys={field.value ? [field.value] : []}
+        // selectedKeys={field.value ? [field.value] : []}
       >
         <SelectItem key="male">Male</SelectItem>
         <SelectItem key="female">Female</SelectItem>
