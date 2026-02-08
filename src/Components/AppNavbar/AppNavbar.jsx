@@ -1,6 +1,4 @@
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from "@heroui/react";
-import axios from "axios";
-import toast from "react-hot-toast";
 import { Link, NavLink } from "react-router";
 import AppButton from "../../Shared/AppButton/AppButton";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -92,10 +90,9 @@ export default function AppNavbar() {
                 </DropdownItem>
                 <DropdownItem key="settings">Name: {userData.name}</DropdownItem>
                 <DropdownItem key="team_settings">Change Password</DropdownItem>
-                <DropdownItem key="analytics" textValue="Update Profile Image">
-                  <label htmlFor="image-upload" className="w-full h-full block cursor-pointer">
-                    Update Profile Image
-                  </label>
+                <DropdownItem key="analytics" onClick={function () { profileImage.current.click() }}>
+                  Update Profile Image
+                  <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
                 </DropdownItem>
 
                 <DropdownItem key="logout" color="danger" onClick={handleLogOut}>
@@ -130,7 +127,7 @@ export default function AppNavbar() {
 
         </NavbarMenu>
       </Navbar>
-      <input type="file" id="image-upload" className="hidden" onChange={handleProfileImage} />
+      <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
     </>
   )
 }
