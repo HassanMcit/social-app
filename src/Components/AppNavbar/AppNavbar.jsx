@@ -34,6 +34,12 @@ export default function AppNavbar() {
       return;
     }
 
+    // Check file type
+    if (!['image/jpeg', 'image/png', 'image/jpg'].includes(imageFile.type)) {
+      toast.error("Invalid file type! Please confirm it is JPG or PNG.");
+      // We continue for now to see if server accepts it, or you can return;
+    }
+
     const formData = new FormData();
     formData.append("photo", imageFile);
 
@@ -51,8 +57,9 @@ export default function AppNavbar() {
         },
         error: (err) => {
           console.log(err);
-          toast.error(err.response?.data?.error)
-          return err.response?.data?.error || "Failed to update image";
+          const errorMsg = err.response?.data?.error || err.message || "Failed to update image";
+          toast.error(errorMsg); // Show exact error on screen
+          return errorMsg;
         },
       }
     );
