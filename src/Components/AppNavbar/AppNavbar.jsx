@@ -25,6 +25,7 @@ export default function AppNavbar() {
 
 
   function handleProfileImage(e) {
+    if (!e.target.files[0]) return;
     const imageFile = e.target.files[0];
     const formData = new FormData();
     formData.append("photo", imageFile);
@@ -38,8 +39,8 @@ export default function AppNavbar() {
       {
         loading: "Updating Profile Image...",
         success: ({ data }) => {
-          getUserData(localStorage.getItem("token")); // Refresh user data
-          return data.message || "Image Updated Successfully";
+          getUserData(localStorage.getItem("token"));
+          return "Image Updated Successfully";
         },
         error: (err) => {
           console.log(err);
@@ -126,9 +127,8 @@ export default function AppNavbar() {
 
 
         </NavbarMenu>
-      <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
       </Navbar>
-
+      <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
     </>
   )
 }
