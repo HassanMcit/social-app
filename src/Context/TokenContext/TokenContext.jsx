@@ -1,12 +1,34 @@
-import { createContext, useState } from "react"
+import axios from "axios";
+import { createContext, useEffect, useState } from "react"
 
 export const TokenCreatedContext = createContext();
 
+
+
 export default function TokenContext({children}) {
-    const [token,setToken] = useState(localStorage.getItem('token'));
+
+    const [userData,setUserData] = useState(null);
+
+    async function getUserData(token) {
+
+      try {
+        const {data:{user}} = await axios({
+          url: `${import.meta.env.VITE_BASE_URL}users/profile-data`,
+          headers: {
+            token
+          }
+        })
+         setUserData(user)
+      } catch (error) {
+        console.log(error.response.data)
+      }
+    }
+    
+
   return (
-    <TokenCreatedContext.Provider value={{token, setToken}}>
+    <TokenCreatedContext value={{getUserData, userData, setUserData}}>
+      
         {children}
-    </TokenCreatedContext.Provider>
+    </TokenCreatedContext>
   )
 }

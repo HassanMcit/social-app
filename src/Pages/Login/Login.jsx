@@ -19,7 +19,7 @@ const schema = zod.object({
 
 export default function Login() {
     const [loading, setLoading] = useState(false);
-    const {setToken} = useContext(TokenCreatedContext);
+    const {getUserData} = useContext(TokenCreatedContext);
     const navigate = useNavigate();
   const {
     handleSubmit,
@@ -42,7 +42,7 @@ export default function Login() {
      loading: 'Please Wait...',
      success: function({data:{message,token}}) {
       localStorage.setItem('token', token)
-      setToken(token)
+      getUserData(token)
       navigate('/')
        setLoading(false);
        return <h1>{message}</h1>
@@ -64,6 +64,8 @@ export default function Login() {
     setLoading(false);
   }
   return (
+    <>
+    <title>Login</title>
     <Form
       onSubmit={handleSubmit(handleUserLogin)}
       className="w-full max-w-2xl mx-auto mt-3 bg-white p-8 shadow-2xl  rounded-4xl border-2 border-blue-300 flex flex-col gap-4"
@@ -111,5 +113,6 @@ export default function Login() {
         </AppButton>
       </div>
     </Form>
+    </>
   );
 }
