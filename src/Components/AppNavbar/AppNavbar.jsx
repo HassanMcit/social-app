@@ -26,7 +26,6 @@ export default function AppNavbar() {
 
   function handleProfileImage(e) {
     console.log(e.target.files[0])
-    if (!e.target.files[0]) return;
     const imageFile = e.target.files[0];
     const formData = new FormData();
     formData.append("photo", imageFile);
@@ -96,7 +95,6 @@ export default function AppNavbar() {
                 <DropdownItem key="team_settings">Change Password</DropdownItem>
                 <DropdownItem key="analytics" onClick={function () { profileImage.current.click() }}>
                   Update Profile Image
-                  <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
                 </DropdownItem>
 
                 <DropdownItem key="logout" color="danger" onClick={handleLogOut}>
@@ -131,7 +129,7 @@ export default function AppNavbar() {
 
         </NavbarMenu>
       </Navbar>
-      {/* <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} /> */}
+      <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
     </>
   )
 }
