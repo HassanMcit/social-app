@@ -1,4 +1,6 @@
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from "@heroui/react";
+import axios from "axios";
+import toast from "react-hot-toast";
 import { Link, NavLink } from "react-router";
 import AppButton from "../../Shared/AppButton/AppButton";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -13,7 +15,7 @@ export default function AppNavbar() {
 
   const router = useNavigate();
 
-  const { userData, setUserData } = useContext(TokenCreatedContext);
+  const { userData, setUserData, getUserData } = useContext(TokenCreatedContext);
 
   function handleLogOut() {
     router('/login');
@@ -22,8 +24,29 @@ export default function AppNavbar() {
   }
 
 
-  function handleProfileImage() {
-    console.log("changed")
+  function handleProfileImage(e) {
+    const imageFile = e.target.files[0];
+    const formData = new FormData();
+    formData.append("photo", imageFile);
+
+    toast.promise(
+      axios.put(`${import.meta.env.VITE_BASE_URL}users/upload-photo`, formData, {
+        headers: {
+          token: localStorage.getItem("token"),
+        },
+      }),
+      {
+        loading: "Updating Profile Image...",
+        success: ({ data }) => {
+          getUserData(localStorage.getItem("token")); // Refresh user data
+          return data.message || "Image Updated Successfully";
+        },
+        error: (err) => {
+          console.log(err);
+          return err.response?.data?.error || "Failed to update image";
+        },
+      }
+    );
   }
 
 
@@ -70,7 +93,6 @@ export default function AppNavbar() {
                 <DropdownItem key="team_settings">Change Password</DropdownItem>
                 <DropdownItem key="analytics" onClick={function () { profileImage.current.click() }}>
                   Update Profile Image
-                  <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
                 </DropdownItem>
 
                 <DropdownItem key="logout" color="danger" onClick={handleLogOut}>
@@ -104,6 +126,7 @@ export default function AppNavbar() {
 
 
         </NavbarMenu>
+      <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
       </Navbar>
 
     </>
