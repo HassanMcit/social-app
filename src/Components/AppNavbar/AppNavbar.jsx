@@ -5,6 +5,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Polkadot } from "iconsax-reactjs";
 import { TokenCreatedContext } from "../../Context/TokenContext/TokenContext";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 export default function AppNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,6 +25,7 @@ export default function AppNavbar() {
 
 
   function handleProfileImage(e) {
+    console.log(e.target.files[0])
     if (!e.target.files[0]) return;
     const imageFile = e.target.files[0];
     const formData = new FormData();
@@ -42,7 +45,8 @@ export default function AppNavbar() {
         },
         error: (err) => {
           console.log(err);
-          return err.response?.data?.error;
+          toast.error(err.response?.data?.error)
+          return err.response?.data?.error || "Failed to update image";
         },
       }
     );
@@ -92,7 +96,7 @@ export default function AppNavbar() {
                 <DropdownItem key="team_settings">Change Password</DropdownItem>
                 <DropdownItem key="analytics" onClick={function () { profileImage.current.click() }}>
                   Update Profile Image
-                  <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
+                  {/* <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} /> */}
                 </DropdownItem>
 
                 <DropdownItem key="logout" color="danger" onClick={handleLogOut}>
