@@ -25,8 +25,15 @@ export default function AppNavbar() {
 
 
   function handleProfileImage(e) {
-    console.log(e.target.files[0])
+    if (!e.target.files[0]) return;
     const imageFile = e.target.files[0];
+
+    // Check file size (limit to 4MB)
+    if (imageFile.size > 4 * 1024 * 1024) {
+      toast.error("Image size too large! Please choose an image under 4MB.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("photo", imageFile);
 
@@ -86,24 +93,18 @@ export default function AppNavbar() {
                   src={userData.photo}
                 />
               </DropdownTrigger>
-              <DropdownMenu aria-label="Profile Actions" variant="flat" onAction={(key) => {
-                if (key === "analytics") {
-                  profileImage.current.click();
-                } else if (key === "logout") {
-                  handleLogOut();
-                }
-              }}>
+              <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="profile" className="h-14 gap-2" textValue="userData">
                   <p className="font-semibold">Signed in as</p>
                   <p className="font-semibold">{userData.email}</p>
                 </DropdownItem>
                 <DropdownItem key="settings">Name: {userData.name}</DropdownItem>
                 <DropdownItem key="team_settings">Change Password</DropdownItem>
-                <DropdownItem key="analytics">
+                <DropdownItem key="analytics" onClick={function () { profileImage.current.click() }}>
                   Update Profile Image
                 </DropdownItem>
 
-                <DropdownItem key="logout" color="danger">
+                <DropdownItem key="logout" color="danger" onClick={handleLogOut}>
                   Log Out
                 </DropdownItem>
               </DropdownMenu>
