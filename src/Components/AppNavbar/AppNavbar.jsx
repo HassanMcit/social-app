@@ -28,16 +28,17 @@ export default function AppNavbar() {
     if (!e.target.files[0]) return;
     const imageFile = e.target.files[0];
 
-    // Check file size (limit to 4MB)
+    // DEBUG: Show file details to user
+    alert(`File Details:\nName: ${imageFile.name}\nType: ${imageFile.type}\nSize: ${(imageFile.size / 1024 / 1024).toFixed(2)} MB`);
+
     if (imageFile.size > 4 * 1024 * 1024) {
-      toast.error("Image size too large! Please choose an image under 4MB.");
+      toast.error("Image size too large! Limit is 4MB.");
       return;
     }
 
-    // Check file type
     if (!['image/jpeg', 'image/png', 'image/jpg'].includes(imageFile.type)) {
-      toast.error("Invalid file type! Please confirm it is JPG or PNG.");
-      // We continue for now to see if server accepts it, or you can return;
+      toast.error("Unsupported file type! Use JPG/PNG.");
+      return; // Stop here if type is wrong
     }
 
     const formData = new FormData();
@@ -50,16 +51,15 @@ export default function AppNavbar() {
         },
       }),
       {
-        loading: "Updating Profile Image...",
+        loading: "Uploading...",
         success: ({ data }) => {
           getUserData(localStorage.getItem("token"));
-          return "Image Updated Successfully";
+          return "Success!";
         },
         error: (err) => {
-          console.log(err);
-          const errorMsg = err.response?.data?.error || err.message || "Failed to update image";
-          toast.error(errorMsg); // Show exact error on screen
-          return errorMsg;
+          const errorMsg = err.response?.data?.error || err.message;
+          alert(`Error: ${errorMsg}`); // Alert the exact error
+          return "Failed to update image";
         },
       }
     );
