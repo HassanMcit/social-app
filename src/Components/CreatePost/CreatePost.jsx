@@ -1,14 +1,17 @@
 import { Card, CardBody, CardHeader, Divider, Form, Image, Input } from '@heroui/react';
 import { DocumentUpload } from 'iconsax-reactjs';
 import AppButton from '../../Shared/AppButton/AppButton';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { TokenCreatedContext } from '../../Context/TokenContext/TokenContext';
 
-export default function CreatePost({ userData }) {
+export default function CreatePost() {
   
-  const [userUploadImage, setUserUploadImage] = useState(null)
+  const [userUploadImage, setUserUploadImage] = useState(null);
+
+  const {userData} = useContext(TokenCreatedContext)
 
   const uploadImage = useRef();
 
