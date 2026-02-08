@@ -42,7 +42,7 @@ export default function AppNavbar() {
         },
         error: (err) => {
           console.log(err);
-          return err.response?.data?.error || "Failed to update image";
+          return err.response?.data?.error;
         },
       }
     );
