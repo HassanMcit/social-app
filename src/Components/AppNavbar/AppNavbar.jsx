@@ -96,7 +96,7 @@ export default function AppNavbar() {
                 <DropdownItem key="team_settings">Change Password</DropdownItem>
                 <DropdownItem key="analytics" onClick={function () { profileImage.current.click() }}>
                   Update Profile Image
-                  {/* <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} /> */}
+                  <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
                 </DropdownItem>
 
                 <DropdownItem key="logout" color="danger" onClick={handleLogOut}>
@@ -131,7 +131,7 @@ export default function AppNavbar() {
 
         </NavbarMenu>
       </Navbar>
-      <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
+      {/* <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} /> */}
     </>
   )
 }
