@@ -93,7 +93,7 @@ export default function AppNavbar() {
                 </DropdownItem>
                 <DropdownItem key="settings">Name: {userData.name}</DropdownItem>
                 <DropdownItem key="team_settings">Change Password</DropdownItem>
-                <DropdownItem key="analytics" onClick={function () { profileImage.current.click() }}>
+                <DropdownItem key="analytics" as="label" htmlFor="image-upload" className="cursor-pointer">
                   Update Profile Image
                 </DropdownItem>
 
@@ -129,7 +129,7 @@ export default function AppNavbar() {
 
         </NavbarMenu>
       </Navbar>
-      <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
+      <input type="file" id="image-upload" className="hidden" ref={profileImage} onChange={handleProfileImage} />
     </>
   )
 }
