@@ -86,18 +86,24 @@ export default function AppNavbar() {
                   src={userData.photo}
                 />
               </DropdownTrigger>
-              <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownMenu aria-label="Profile Actions" variant="flat" onAction={(key) => {
+                if (key === "analytics") {
+                  profileImage.current.click();
+                } else if (key === "logout") {
+                  handleLogOut();
+                }
+              }}>
                 <DropdownItem key="profile" className="h-14 gap-2" textValue="userData">
                   <p className="font-semibold">Signed in as</p>
                   <p className="font-semibold">{userData.email}</p>
                 </DropdownItem>
                 <DropdownItem key="settings">Name: {userData.name}</DropdownItem>
                 <DropdownItem key="team_settings">Change Password</DropdownItem>
-                <DropdownItem key="analytics" as="label" htmlFor="image-upload" className="cursor-pointer">
+                <DropdownItem key="analytics">
                   Update Profile Image
                 </DropdownItem>
 
-                <DropdownItem key="logout" color="danger" onClick={handleLogOut}>
+                <DropdownItem key="logout" color="danger">
                   Log Out
                 </DropdownItem>
               </DropdownMenu>
@@ -129,7 +135,7 @@ export default function AppNavbar() {
 
         </NavbarMenu>
       </Navbar>
-      <input type="file" id="image-upload" className="hidden" ref={profileImage} onChange={handleProfileImage} />
+      <input type="file" className="hidden" ref={profileImage} onChange={handleProfileImage} />
     </>
   )
 }
