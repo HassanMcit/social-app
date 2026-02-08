@@ -23,6 +23,12 @@ export default function TokenContext({children}) {
         console.log(error.response.data)
       }
     }
+
+
+    useEffect(function() {
+      localStorage.getItem('token') && getUserData(localStorage.getItem('token'))
+    }, [])
+
     
 
   return (
