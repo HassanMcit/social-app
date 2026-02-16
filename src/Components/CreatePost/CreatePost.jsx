@@ -6,6 +6,8 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { TokenCreatedContext } from '../../Context/TokenContext/TokenContext';
+import { useQueryClient } from '@tanstack/react-query';
+
 
 export default function CreatePost() {
   
@@ -29,6 +31,9 @@ export default function CreatePost() {
   })
 
 
+  const queryClient = useQueryClient()
+
+
   function handleUserCreatePost(data) {
     const formDataImage = new FormData();
     formDataImage.append('body', data.body)
@@ -43,6 +48,8 @@ export default function CreatePost() {
             reset()
         setImage(null);
         setUserUploadImage(null);
+        queryClient.invalidateQueries({queryKey: ["allPosts"]})
+        console.log(queryClient.invalidateQueries({queryKey: "allPosts"}))
         return msgs.data.message
         },
         error: function({response:{data:{error}}}) {
@@ -58,7 +65,7 @@ export default function CreatePost() {
   return (
     <Card className="bg-gray-100/20 border-2 border-white">
       <CardHeader className="flex gap-3">
-        What in Your Mind {userData?.name}
+        {/* What in Your Mind {userData?.name} */}
       </CardHeader>
       <Divider />
       <CardBody>

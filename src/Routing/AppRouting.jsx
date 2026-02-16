@@ -5,11 +5,13 @@ import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 import AuthProtectedRoute from "./AuthProtectedRoute/AuthProtectedRoute";
+import PostDetails from "../Pages/PostDetails/PostDetails";
 
 export const myRouting = createBrowserRouter([
     {path: '', element: <Layout/>, children: [
         {index: true, element: <ProtectedRoute><Posts/></ProtectedRoute>},
         {path:'posts', element: <ProtectedRoute><Posts/></ProtectedRoute>},
+        {path:'postDetails/:id', element: <ProtectedRoute><PostDetails/></ProtectedRoute>},
         {path:'login', element: <AuthProtectedRoute><Login/></AuthProtectedRoute>},
         {path:'register', element: <AuthProtectedRoute><Register/></AuthProtectedRoute>},
     ]}

@@ -53,8 +53,9 @@ export default function AppNavbar() {
       {
         loading: "Uploading...",
         success: ({ data }) => {
-          getUserData(localStorage.getItem("token"));
-          return "Success!";
+          // console.log(data)
+          getUserData();
+          return data.message;
         },
         error: (err) => {
           const errorMsg = err.response?.data?.error || err.message;

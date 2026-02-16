@@ -2,11 +2,12 @@ import { DatePicker, Form, Input, Select, SelectItem } from "@heroui/react";
 import AppButton from "../../Shared/AppButton/AppButton";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
+import { TokenCreatedContext } from "../../Context/TokenContext/TokenContext";
 
 const schema = zod
   .object({
@@ -26,6 +27,7 @@ const schema = zod
         /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
         "Invalid Password",
       ),
+      username: zod.string(),
     dateOfBirth: zod.coerce.date().refine(function (value) {
       const today = new Date();
       let age = today.getFullYear() - value.getFullYear();
@@ -49,6 +51,7 @@ const schema = zod
 export default function Register() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const {setUserData} = useContext(TokenCreatedContext)
   const {
     handleSubmit,
     register,
@@ -61,6 +64,7 @@ export default function Register() {
     defaultValues: {
       name: "",
       email: "",
+      username: "",
       password: "",
       rePassword: "",
       dateOfBirth: "",
@@ -78,16 +82,18 @@ export default function Register() {
         loading: "Saving...",
         success: function ({ data }) {
           setLoading(false);
+          setUserData(data.data.user)
+          localStorage.setItem('user', JSON.stringify(data.data.user))
           navigate("/login");
           return <h1 className="text-green-500">{data.message}</h1>;
         },
         error: function ({
           response: {
-            data: { error },
+            data: { errors },
           },
         }) {
           setLoading(false);
-          return <h1 className="text-red-500">{error}</h1>;
+          return <h1 className="text-red-500 capitalize">{errors}</h1>;
         },
       },
     );
@@ -108,6 +114,17 @@ export default function Register() {
           {...register("name")}
           isInvalid={!!errors.name}
           errorMessage={errors.name?.message}
+          type="text"
+        />
+
+        <Input
+          isRequired
+          label="User Name"
+          labelPlacement="outside"
+          placeholder="Enter your User Name"
+          {...register("username")}
+          isInvalid={!!errors.username}
+          errorMessage={errors.username?.message}
           type="text"
         />
 

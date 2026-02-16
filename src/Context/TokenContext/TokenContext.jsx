@@ -5,36 +5,36 @@ export const TokenCreatedContext = createContext();
 
 
 
-export default function TokenContext({children}) {
+export default function TokenContext({ children }) {
 
-    const [userData,setUserData] = useState(null);
+  const [userData, setUserData] = useState(null);
 
-    async function getUserData(token) {
+  async function getUserData() {
 
-      try {
-        const {data:{user}} = await axios({
-          url: `${import.meta.env.VITE_BASE_URL}users/profile-data`,
-          headers: {
-            token
-          }
-        })
-         setUserData(user)
-      } catch (error) {
-        console.log(error.response.data)
-      }
+    try {
+      const {data:{data:{user}}} = await axios({
+        url: `${import.meta.env.VITE_BASE_URL}users/profile-data`,
+        headers: {
+          Token: localStorage.getItem('token')
+        }
+      })
+      setUserData(user)
+    } catch (error) {
+      console.log(error.response.data)
     }
+  }
 
 
-    useEffect(function() {
-      localStorage.getItem('token') && getUserData(localStorage.getItem('token'))
-    }, [])
+  useEffect(function () {
+    localStorage.getItem('token') && getUserData(localStorage.getItem('token'))
+  }, [])
 
-    
+
 
   return (
-    <TokenCreatedContext value={{getUserData, userData, setUserData}}>
-      
-        {children}
+    <TokenCreatedContext value={{ getUserData, userData, setUserData }}>
+
+      {children}
     </TokenCreatedContext>
   )
 }

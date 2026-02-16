@@ -1,12 +1,18 @@
 import { Card, CardBody, CardFooter, CardHeader, Divider, Image } from '@heroui/react'
-import { Like1, MessageText, More, Send2 } from 'iconsax-reactjs'
-import React from 'react'
+import { MessageText, More } from 'iconsax-reactjs'
 import { Link } from 'react-router'
 import ShowComment from '../ShowComment/ShowComment'
+import CreateComments from '../CreateComments/CreateComments'
 
-export default function PostDetails({post}) {
-    const {user:{name, photo},body, image, createdAt,comments} = post
-    
+export default function PostCard({post, comment}) {
+
+  // console.log(data.commentsCount)
+    // console.log(data.topComment)
+  
+    const {user:{name, photo},body, image, createdAt,commentsCount, _id, topComment} = post
+
+
+  
   return (
     <>
     <Card >
@@ -40,11 +46,17 @@ export default function PostDetails({post}) {
       <Divider />
       <CardFooter className="flex justify-between">
         <div className='flex gap-2'>
-        {comments.length }<MessageText className="cursor-pointer" size="20" variant='TwoTone' color="#000"/></div>
-        <Link className='text-sm text-blue-400 hover:underline'>All Comments</Link>
+        {commentsCount }<MessageText className="cursor-pointer" size="20" variant='TwoTone' color="#000"/></div>
+        {!comment && <Link to={`/postDetails/${_id}`} className='text-sm text-blue-400 hover:underline'>All Comments</Link>}
       </CardFooter>
     <div className='m-4'>
-      <ShowComment comment={comments[0]}/>
+      {!comment ? commentsCount > 0 && <ShowComment comment={topComment} /> : <div className='space-y-6'>
+        {comment.map(function(e){return  <ShowComment key={e._id} comment={e}/>})}
+        </div>}
+
+    </div>
+    <div className='m-5'>
+      <CreateComments id={_id}/>
     </div>
     </Card>
     </>
