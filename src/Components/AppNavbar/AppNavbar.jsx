@@ -55,7 +55,7 @@ export default function AppNavbar() {
         success: ({ data }) => {
           // console.log(data)
           getUserData();
-          return data.message;
+          return data?.message;
         },
         error: (err) => {
           const errorMsg = err.response?.data?.error || err.message;
@@ -98,15 +98,15 @@ export default function AppNavbar() {
                   color="primary"
                   name="Jason Hughes"
                   size="md"
-                  src={userData.photo}
+                  src={userData?.photo}
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="profile" className="h-14 gap-2" textValue="userData">
                   <p className="font-semibold">Signed in as</p>
-                  <p className="font-semibold">{userData.email}</p>
+                  <p className="font-semibold">{userData?.email}</p>
                 </DropdownItem>
-                <DropdownItem key="settings">Name: {userData.name}</DropdownItem>
+                <DropdownItem key="settings">Name: {userData?.name}</DropdownItem>
                 <DropdownItem key="team_settings">Change Password</DropdownItem>
                 <DropdownItem key="analytics" onClick={function () { profileImage.current.click() }}>
                   Update Profile Image
